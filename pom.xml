@@ -11,7 +11,7 @@
 
     <name>MIDI Grammars</name>
     <description>ANTLR based grammars for handling MIDI</description>
-<!--    <url>TODO</url>-->
+    <url>https://github.com/milnet2/midi-grammar/</url>
     <inceptionYear>2004</inceptionYear>
 
     <modules>
@@ -25,21 +25,21 @@
     <licenses>
         <license>
             <name>BSD-3-Clause</name>
-<!--            <url>TODO</url>-->
+            <url>https://raw.githubusercontent.com/milnet2/midi-grammar/refs/heads/main/LICENSE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
 
-<!--    <issueManagement>-->
-<!--        <system>GitHub Issues</system>-->
-<!--        <url>TODO</url>-->
-<!--    </issueManagement>-->
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/milnet2/midi-grammar/issues</url>
+    </issueManagement>
 
-<!--    <scm>-->
-<!--        <url>https://github.com/TODO/tree/master</url>-->
-<!--        <connection>scm:git:git://github.com/TODO</connection>-->
-<!--        <developerConnection>scm:git:git@github.com:TODO</developerConnection>-->
-<!--    </scm>    -->
+    <scm>
+        <url>https://github.com/milnet2/midi-grammar/tree/main</url>
+        <connection>scm:git:git://github.com/milnet2/midi-grammar.git</connection>
+        <developerConnection>scm:git:git@github.com:milnet2/midi-grammar.git</developerConnection>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
