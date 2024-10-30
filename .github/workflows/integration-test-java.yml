@@ -36,9 +36,10 @@ jobs:
         run: mvn clean verify -pl integration-test/java/
 
       # Step 5: Archive test results
-      - name: Archive Test Results
+      - name: Publish Test Report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: dorny/test-reporter@v1
         with:
-          name: integration-test-results
-          path: integration-test/java/target/failsafe-reports/*.xml
+          name: Integration Test Report
+          path: integration-test/java/target/failsafe-reports/TEST-*.xml
+          reporter: surefire
