@@ -22,9 +22,19 @@
                 <skipTests>true</skipTests>
             </properties>
         </profile>
+        <profile>
+            <id>cpp</id>
+            <properties>
+                <skipTests>true</skipTests>
+                <target.cpp>true</target.cpp>
+                <cmake.download>false</cmake.download>
+<!--                <cmake.dir></cmake.dir>-->
+            </properties>
+        </profile>
     </profiles>
 
     <properties>
+        <target.cpp>false</target.cpp>
     </properties>
 
     <dependencies>
@@ -62,6 +72,38 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.googlecode.cmake-maven-project</groupId>
+                <artifactId>cmake-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>cmake-generate</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <sourcePath>${project.build.sourceDirectory}/../cpp</sourcePath>
+                            <targetPath>${project.build.directory}/cmake</targetPath>
+<!--                            <targetPath>${project.build.directory}/${platform}-${build.type}//cmake</targetPath>-->
+<!--                            <environmentVariables>-->
+<!--                                <CMAKE_CLASSIFIER>${cmake.classifier}</CMAKE_CLASSIFIER>-->
+<!--                            </environmentVariables>-->
+                        </configuration>
+                    </execution>
+<!--                    <execution>-->
+<!--                        <id>cmake-compile</id>-->
+<!--                        <phase>process-resources</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>compile</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <projectDirectory>${project.build.directory}/${platform}-${build.type}/cmake</projectDirectory>-->
+<!--                            <config>${cmake.config}</config>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+                </executions>
             </plugin>
         </plugins>
     </build>
