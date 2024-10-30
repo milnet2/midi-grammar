@@ -18,6 +18,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>midi-file-grammar</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -37,6 +38,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <failIfNoTests>true</failIfNoTests>
+                    <forkMode>always</forkMode>
+                    <classpathDependencyScopeExclude>provided</classpathDependencyScopeExclude>
+                </configuration>
             </plugin>
         </plugins>
     </build>
