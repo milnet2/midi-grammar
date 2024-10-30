@@ -4,6 +4,7 @@ import kotlin.streams.toList
 
 object ParserUtils {
 
+    @JvmStatic
     fun String.charHexCodesAsString(separator: String = " ", wrapAt: Int = 16, wrapIndent: String = "    ") =
         if (length <= wrapAt) {
             chars().toList()

@@ -1,0 +1,33 @@
+name: Java Integration Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: maven
+
+      - name: Build with Maven and run integration tests
+        run: mvn --batch-mode clean verify --activate-profiles java-integration
+
+      - name: Publish Test Report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Integration Test Report
+          path: integration-test/java/target/failsafe-reports/TEST-*.xml
+          reporter: java-junit
