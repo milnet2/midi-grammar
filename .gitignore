@@ -38,3 +38,4 @@ build/
 ### Mac OS ###
 .DS_Store
 /midi-file-grammar/gen/
+/midi-file-grammar/src/main/antlr4/de/tobiasblaschke/lib/midi/adapter/grammar/Midi1FileLexer.tokens
