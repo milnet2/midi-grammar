@@ -1,0 +1,94 @@
+lexer grammar Midi1FileLexer;
+
+options {
+    superClass = LexerAdapter;
+}
+
+tokens {
+    /**
+     *  The `LexerAdapter` will emit this token after all announced bytes have been read.
+     */
+    END_OF_CHUNK,
+    /**
+     *  The `LexerAdapter` will emit this token after a "command"-token carrying channel information.
+     *  @see de.tobiasblaschke.lib.midi.adapter.grammar.LexerAdapter.emitChannelTokenIfApplicable
+     */
+    CHANNEL
+}
+
+// default-mode is "chunks" 'MRhd' 'TRrk'
+BEGIN_MIDI_HEADER: 'MThd' CHUNK_LENGTH -> pushMode(NUMERIC_ARGUMENTS);
+BEGIN_TRACK: 'MTrk' CHUNK_LENGTH -> pushMode(MIDI_COMMAND), pushMode(VARIABLE_LENGTH_QUANTITY);
+
+fragment CHUNK_LENGTH: BYTE8 BYTE8 BYTE8 BYTE8;
+fragment BYTE8: '\u0000'..'\u00FF';
+
+mode VARIABLE_LENGTH_QUANTITY;
+
+VARIABLE_LENGTH_QUANTITY_PREFIX: '\u0080'..'\u00FF' -> more;
+VARIABLE_LENGTH_QUANTITY_VALUE: '\u0000'..'\u007F' -> popMode;
+
+// ---------------------------------------------------
+// Midi-commands (exluding time)
+mode MIDI_COMMAND;
+
+COMMAND_NOTE_OFF_RANGE: '\u0080'..'\u008F' { popModeAfterBytes(2); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+COMMAND_NOTE_ON_RANGE: '\u0090'..'\u009F' { popModeAfterBytes(2); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+COMMAND_POLYPHONIC_KEY_PRESSURE_RANGE: '\u00A0'..'\u00AF' { popModeAfterBytes(2); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+COMMAND_CC_RANGE: '\u00B0'..'\u00BF' { popModeAfterBytes(2); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+COMMAND_PC_RANGE: '\u00C0'..'\u00CF' { popModeAfterBytes(1); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+COMMAND_CHANNEL_PRESSURE_RANGE: '\u00D0'..'\u00DF' { popModeAfterBytes(1); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+COMMAND_PITCH_BEND_RANGE: '\u00E0'..'\u00EF' { popModeAfterBytes(2); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+
+RUNNING_STATUS: '\u0000'..'\u007F' -> pushMode(VARIABLE_LENGTH_QUANTITY); // May consume a second byte
+
+SYSTEM_EXCLUSIVE_START : '\u00F0'; // Start of sysex TODO: SYSEX_END   : '\u00F7'; // End of sysex
+SYSTEM_COMMON_MIDI_TIME_CODE: '\u00F1'; // TODO
+SYSTEM_COMMON_SONG_POSITION_POINTER: '\u00F2' { popModeAfterBytes(2); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+SYSTEM_COMMON_SONG_SELECT: '\u00F3' { popModeAfterBytes(1); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+SYSTEM_COMMON_TUNE_REQUEST: '\u00F6'-> pushMode(VARIABLE_LENGTH_QUANTITY);
+SYSTEM_EXCLUSIVE_END: '\u00F7'-> pushMode(VARIABLE_LENGTH_QUANTITY); // aka EOX
+SYSTEM_COMMON: '\u00F1'..'\u00F7';
+
+SYSTEM_REAL_TIME_TIMING_CLOCK: '\u00F8' -> pushMode(VARIABLE_LENGTH_QUANTITY);
+SYSTEM_REAL_TIME_START: '\u00FA' -> pushMode(VARIABLE_LENGTH_QUANTITY);
+SYSTEM_REAL_TIME_CONTINUE: '\u00FB' -> pushMode(VARIABLE_LENGTH_QUANTITY);
+SYSTEM_REAL_TIME_STOP: '\u00FC' -> pushMode(VARIABLE_LENGTH_QUANTITY);
+SYSTEM_REAL_TIME_ACTIVE_SENSING: '\u00FE' -> pushMode(VARIABLE_LENGTH_QUANTITY);
+SYSTEM_REAL_TIME: '\u00F8'..'\u00FE' -> pushMode(VARIABLE_LENGTH_QUANTITY);
+
+SYSTEM_REAL_TIME_FF_SEQUENCE_NUMBER: '\u00FF' '\u0000' '\u0002' { popModeAfterBytes(2); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+SYSTEM_REAL_TIME_FF_TEXT: '\u00FF' '\u0001' -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(VARCHAR_ARGUMENT);
+SYSTEM_REAL_TIME_FF_COPYRIGHT_NOTICE: '\u00FF' '\u0002' -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(VARCHAR_ARGUMENT);
+SYSTEM_REAL_TIME_FF_SEQUENCE_OR_TRACK_NAME: '\u00FF' '\u0003' -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(VARCHAR_ARGUMENT);
+SYSTEM_REAL_TIME_FF_INSTRUMENT_NAME: '\u00FF' '\u0004' -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(VARCHAR_ARGUMENT);
+SYSTEM_REAL_TIME_FF_LYRIC: '\u00FF' '\u0005' -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(VARCHAR_ARGUMENT);
+SYSTEM_REAL_TIME_FF_MARKER: '\u00FF' '\u0006' -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(VARCHAR_ARGUMENT);
+SYSTEM_REAL_TIME_FF_CUE_POINT: '\u00FF' '\u0007' -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(VARCHAR_ARGUMENT);
+SYSTEM_REAL_TIME_MIDI_CHANNEL_PREFIX: '\u00FF' '\u0020' '\u0001' { popModeAfterBytes(1); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+SYSTEM_REAL_TIME_END_OF_TRACK: '\u00FF' '\u002F' '\u0000'; // maybe -> popMode;
+SYSTEM_REAL_TIME_FF_TEMPO: '\u00FF' '\u0051' '\u0003' { popModeAfterBytes(3); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+SYSTEM_REAL_TIME_FF_SMPTE_OFFSET: '\u00FF' '\u0054' '\u0005' { popModeAfterBytes(5); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+SYSTEM_REAL_TIME_FF_TIME_SIGNATURE: '\u00FF' '\u0058' '\u0004' { popModeAfterBytes(4); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+SYSTEM_REAL_TIME_FF_KEY_SIGNATURE: '\u00FF' '\u0058' '\u0002' { popModeAfterBytes(2); } -> pushMode(VARIABLE_LENGTH_QUANTITY), pushMode(NUMERIC_ARGUMENTS);
+SYSTEM_REAL_TIME_FF_SEQUENCER_SPECIFIC: '\u00FF' '\u007F'; // TODO: variable-length data
+SYSTEM_REAL_TIME_FF: '\u00FF';
+
+mode VARCHAR_ARGUMENT;
+
+// same as VARIABLE_LENGTH_QUANTITY
+TEXT_LENGTH_QUANTITY_PREFIX: '\u0080'..'\u00FF' -> more;
+TEXT_LENGTH_QUANTITY_VALUE: '\u0000'..'\u007F' { popModeAfterVariableLengthQuantity(); } -> popMode, pushMode(VARCHAR_ARGUMENT_TEXT);
+
+mode VARCHAR_ARGUMENT_TEXT;
+
+TEXT_BYTE: .;
+
+mode NUMERIC_ARGUMENTS;
+
+ARG_BYTE7:          '\u0000'..'\u007F';
+ARG_BYTE_UPPER:     '\u0080'..'\u00FF';
+ARG_ANY: .;
+
+
+
