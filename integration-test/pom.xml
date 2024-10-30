@@ -13,9 +13,14 @@
     <artifactId>integration-test</artifactId>
     <packaging>pom</packaging>
 
-    <modules>
-        <module>java</module>
-    </modules>
+    <profiles>
+        <profile>
+            <id>java-integration</id>
+            <modules>
+                <module>java</module>
+            </modules>
+        </profile>
+    </profiles>
 
     <build>
         <pluginManagement>

@@ -19,19 +19,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          cache: maven
 
       - name: Build with Maven and run integration tests
-        run: |
-          mvn -DskipTests -pl midi-file-grammar install
-          mvn clean verify -pl integration-test/java/
+        run: mvn --batch-mode clean verify --activate-profiles java-integration
 
       - name: Publish Test Report
         if: always()

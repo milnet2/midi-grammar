@@ -14,9 +14,17 @@
     <url>https://github.com/milnet2/midi-grammar/</url>
     <inceptionYear>2004</inceptionYear>
 
+    <profiles>
+        <profile>
+            <id>java-integration</id>
+            <modules>
+                <module>integration-test</module>
+            </modules>
+        </profile>
+    </profiles>
+
     <modules>
         <module>midi-file-grammar</module>
-        <module>integration-test</module>
     </modules>
 
     <licenses>

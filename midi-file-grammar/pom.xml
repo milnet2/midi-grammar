@@ -15,6 +15,15 @@
     <name>MIDI file grammar</name>
     <description>ANTLR based grammars for handling MIDI-files</description>
 
+    <profiles>
+        <profile>
+            <id>java-integration</id>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+        </profile>
+    </profiles>
+
     <properties>
     </properties>
 
