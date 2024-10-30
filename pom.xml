@@ -42,6 +42,8 @@
         <kotlin.code.style>official</kotlin.code.style>
         <maven.compiler.release>17</maven.compiler.release>
         <kotlin.compiler.jvmTarget>${maven.compiler.release}</kotlin.compiler.jvmTarget>
+        <maven.compiler.target>${maven.compiler.release}</maven.compiler.target>
+        <maven.compiler.source>${maven.compiler.release}</maven.compiler.source>
 
         <kotlin.version>2.0.20</kotlin.version>
         <antlr.version>4.13.2</antlr.version>
@@ -161,6 +163,11 @@
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.22.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.12.1</version>
             </plugin>
         </plugins>
     </build>
