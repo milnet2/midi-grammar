@@ -11,18 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up JDK 17
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # Step 3: Cache Maven dependencies for faster builds
       - name: Cache Maven dependencies
         uses: actions/cache@v3
         with:
@@ -31,15 +28,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Step 4: Build the project and run integration tests
       - name: Build with Maven and run integration tests
-        run: mvn clean verify -pl integration-test/java/
+        run: |
+          mvn -DskipTests -pl midi-file-grammar install
+          mvn clean verify -pl integration-test/java/
 
-      # Step 5: Archive test results
       - name: Publish Test Report
         if: always()
         uses: dorny/test-reporter@v1
         with:
           name: Integration Test Report
           path: integration-test/java/target/failsafe-reports/TEST-*.xml
-          reporter: surefire
+          reporter: java-junit
