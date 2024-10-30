@@ -1,0 +1,53 @@
+== ANTLR based grammars for handling MIDI
+:icon-pro: pass:normal[[green]*➕*]
+:icon-con: pass:normal[[red]*➖*]
+
+WARNING::
+    This project is in a very early stage, you should avoid it in production-code.
+    See <<alternatives>> below.
+
+Goals of the project:
+
+* Provide easy-to-use access to MIDI-events
+* Be resilient to broken MIDI-files
+* Be easy to extend
+* Eventually support for other programming-languages ANTLR supports
+** Currently, the Lexer uses a custom super-class (written in Java) which limits the available platforms
+
+
+[[alternatives]]
+=== Alternatives
+
+[cols="1,4"]
+|===
+|Alternative | Description
+
+| _javax.sound.midi_ from the JDK
+a| * {icon-pro} Very well tested
+   * {icon-con} Only exposes byte-representation of MIDI-messages
+   * {icon-con} Maybe a bit cumbersome to use at times
+
+| https://github.com/atsushieno/ktmidi[ktmidi]
+a| * {icon-pro} Kotlin Multiplatform
+   * {icon-pro} Support for MIDI 2.0
+
+|===
+
+
+
+[[usage]]
+=== Usage
+
+==== Read in _.mid_ file into a tree-structure
+
+[source,kotlin,indent=0]
+----
+include::midi-file-grammar/src/test/kotlin/de/tobiasblaschke/lib/midi/adapter/grammar/Midi1FileParserTest.kt[tag=read-file]
+----
+
+==== Read in _.mid_ file as token-stream
+
+[source,kotlin,indent=0]
+----
+include::midi-file-grammar/src/test/kotlin/de/tobiasblaschke/lib/midi/adapter/grammar/Midi1FileLexerTest.kt[tag=read-file]
+----

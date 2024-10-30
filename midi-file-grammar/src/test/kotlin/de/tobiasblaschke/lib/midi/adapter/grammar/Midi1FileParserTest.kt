@@ -7,8 +7,11 @@ import de.tobiasblaschke.lib.midi.adapter.grammar.LexerTestUtils.lexToStream
 import de.tobiasblaschke.lib.midi.adapter.grammar.LexerTestUtils.makeParser
 import de.tobiasblaschke.lib.midi.adapter.grammar.ParserUtils.charHexCodesAsString
 import de.tobiasblaschke.lib.midi.adapter.grammar.domain.*
+import org.antlr.v4.runtime.CharStreams
+import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.DefaultErrorStrategy
 import org.antlr.v4.runtime.Token
+import java.nio.charset.StandardCharsets
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -415,8 +418,13 @@ class Midi1FileParserTest {
 
     @Test
     fun `should parse text-nodes in MIDI_sample`() {
+        // Do not optimize/shorten the tagged code, as it's used in documentation
+        // tag::read-file[]
         val tokens = javaClass.getResourceAsStream("/MIDI_sample.mid")
-            .use(LexerTestUtils::lexToStream)
+            .use { byteStream ->
+                val bytesAsChar = CharStreams.fromStream(byteStream, StandardCharsets.ISO_8859_1)
+                val lexer = Midi1FileLexer(bytesAsChar)
+                CommonTokenStream(lexer) }
         val parser = makeParser(tokens)
 
         val visitor = Midi1FileChunkVisitor()
@@ -431,6 +439,7 @@ class Midi1FileParserTest {
             MidiFileEvent(deltaTime = 0, event =
                 MidiEvent.MetaEvent.SequenceOrTrackName("Wikipedia MIDI (extended)")),
         ), tracks[0].events.filter { it.event is MidiEvent.TextEvent }, "Unable to match events in track 1")
+        // end::read-file[]
 
         // Text in channel 2
         assertEquals(listOf(

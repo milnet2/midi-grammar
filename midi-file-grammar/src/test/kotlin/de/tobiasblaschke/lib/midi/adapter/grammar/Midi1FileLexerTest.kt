@@ -3,6 +3,9 @@ package de.tobiasblaschke.lib.midi.adapter.grammar
 import de.tobiasblaschke.lib.midi.adapter.grammar.LexerTestUtils.assertTokensMatch
 import de.tobiasblaschke.lib.midi.adapter.grammar.LexerTestUtils.dump
 import de.tobiasblaschke.lib.midi.adapter.grammar.LexerTestUtils.lexToList
+import org.antlr.v4.runtime.CharStreams
+import org.antlr.v4.runtime.CommonTokenStream
+import java.nio.charset.StandardCharsets
 import kotlin.test.Test
 
 class Midi1FileLexerTest {
@@ -298,8 +301,14 @@ class Midi1FileLexerTest {
 
     @Test
     fun `should lex MIDI_sample`() {
+        // Do not optimize/shorten the tagged code, as it's used in documentation
+        // tag::read-file[]
         val tokens = javaClass.getResourceAsStream("/MIDI_sample.mid")
-            .use(LexerTestUtils::lexToList)
+            .use { byteStream ->
+                val bytesAsChar = CharStreams.fromStream(byteStream, StandardCharsets.ISO_8859_1)
+                val lexer = Midi1FileLexer(bytesAsChar)
+                CommonTokenStream(lexer) }
+            .let(LexerTestUtils::tokenStreamAsList) // only for easy access, don't do that when passing the stream to a parser
 
         // header
         assertTokensMatch(tokens.subList(0, 8),
@@ -312,6 +321,7 @@ class Midi1FileLexerTest {
             TokenMatcher(Midi1FileLexer.ARG_BYTE_UPPER, "\u00E0"),
             TokenMatcher(Midi1FileLexer.END_OF_CHUNK, ""),
         )
+        // end::read-file[]
 
         // text in track 1
         val text = "Wikipedia MIDI (extended)"
