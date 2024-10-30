@@ -1,7 +1,6 @@
 package de.tobiasblaschke.integration.midi.adapter.grammar;
 
 import de.tobiasblaschke.lib.midi.adapter.grammar.Midi1FileChunkVisitor;
-import de.tobiasblaschke.lib.midi.adapter.grammar.Midi1FileParser;
 import de.tobiasblaschke.lib.midi.adapter.grammar.domain.MidiFileChunk;
 import de.tobiasblaschke.lib.midi.adapter.grammar.domain.MidiFileTrackFormat;
 import de.tobiasblaschke.lib.midi.adapter.grammar.domain.TimeDivision;
@@ -11,7 +10,7 @@ import static de.tobiasblaschke.integration.midi.adapter.grammar.LexerTestUtils.
 import static de.tobiasblaschke.integration.midi.adapter.grammar.LexerTestUtils.makeParser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Midi1FileParserTest {
+public class Midi1FileParserTestIT {
 
     @Test
     void should_deserialize_format_0_header() {

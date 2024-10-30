@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static de.tobiasblaschke.integration.midi.adapter.grammar.LexerTestUtils.assertTokensMatch;
 import static de.tobiasblaschke.integration.midi.adapter.grammar.LexerTestUtils.lexToList;
 
-public class Midi1FileLexerTest {
+public class Midi1FileLexerTestIT {
 
     @Test
     void should_lex_format_0_header() {
