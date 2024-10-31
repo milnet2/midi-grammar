@@ -26,7 +26,7 @@ include_directories(${ANTLR_SampleGrammarParser_OUTPUT_DIR})
 include_directories(${GENERATED_GRAMMAR_DIR})
 include_directories(${HERE})
 
-add_library(midi_file_grammar STATIC
+add_library(midi_file_grammar
         ${GENERATED_GRAMMAR_DIR}/Midi1FileLexer.cpp
         ${GENERATED_GRAMMAR_DIR}/Midi1FileParserBaseListener.cpp
         ${GENERATED_GRAMMAR_DIR}/Midi1FileParserBaseVisitor.cpp

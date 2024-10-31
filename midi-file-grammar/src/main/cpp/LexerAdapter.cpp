@@ -3,10 +3,7 @@
 
 using namespace de_tobiasblaschke_lib_midi_adapter_grammar;
 
-LexerAdapter::LexerAdapter(antlr4::CharStream *input) : Lexer(input), endOfChunk(-1), runningStatusArgumentCount(0) {
-
-//	stream = input;
-}
+LexerAdapter::LexerAdapter(antlr4::CharStream *input) : Lexer(input), endOfChunk(-1), runningStatusArgumentCount(0) {}
 
 std::unique_ptr<antlr4::Token> LexerAdapter::nextToken() {
     if (extraTokens.empty()) {
