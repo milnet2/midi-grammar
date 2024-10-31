@@ -11,6 +11,8 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
+# TODO: https://github.com/antlr/antlr4/tree/master/runtime/Cpp/cmake
+
 include(FetchContent)
 include(ExternalProject)
 FetchContent_Declare(

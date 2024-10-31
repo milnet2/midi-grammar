@@ -37,6 +37,7 @@
                 <skipTests>true</skipTests>
                 <skip.cpp>false</skip.cpp>
                 <antlr.target.language>Cpp</antlr.target.language>
+                <antlr.target.package>de_tobiasblaschke_lib_midi_adapter_grammar</antlr.target.package>
                 <cmake.download>false</cmake.download>
 <!--                <cmake.dir></cmake.dir>-->
             </properties>
@@ -88,6 +89,7 @@
         <skip.cpp>true</skip.cpp>
         <skip.kotlin>true</skip.kotlin>
         <antlr.target.language>Java</antlr.target.language>
+        <antlr.target.package>de.tobiasblaschke.lib.midi.adapter.grammar</antlr.target.package>
     </properties>
 
     <dependencies>
@@ -124,8 +126,11 @@
                 <configuration>
                     <options>
                         <language>${antlr.target.language}</language>
-<!--                        <package>antlrcpptest</package>-->
                     </options>
+                    <arguments>
+                        <argument>-package</argument>
+                        <argument>${antlr.target.package}</argument>
+                    </arguments>
                 </configuration>
             </plugin>
             <plugin>
