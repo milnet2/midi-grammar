@@ -24,6 +24,7 @@ include_directories(${antlr4_SOURCE_DIR}/runtime/Cpp/runtime/src/)   # set by Fe
 include_directories(${ANTLR_SampleGrammarLexer_OUTPUT_DIR})
 include_directories(${ANTLR_SampleGrammarParser_OUTPUT_DIR})
 include_directories(${GENERATED_GRAMMAR_DIR})
+include_directories(${HERE})
 
 add_library(midi_file_grammar STATIC
         ${GENERATED_GRAMMAR_DIR}/Midi1FileLexer.cpp
@@ -32,5 +33,5 @@ add_library(midi_file_grammar STATIC
         ${GENERATED_GRAMMAR_DIR}/Midi1FileParser.cpp
         ${GENERATED_GRAMMAR_DIR}/Midi1FileParserListener.cpp
         ${GENERATED_GRAMMAR_DIR}/Midi1FileParserVisitor.cpp
-        # ${PROJECT_SOURCE_DIR}/LexerAdapter.cpp
+        ${HERE}/LexerAdapter.cpp
 )

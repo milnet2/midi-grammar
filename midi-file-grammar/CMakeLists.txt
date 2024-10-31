@@ -7,5 +7,6 @@ project(midi_file_grammar)
 set(GENERATED_GRAMMAR_DIR ${PROJECT_SOURCE_DIR}/target/generated-sources/antlr4/de/tobiasblaschke/lib/midi/adapter/grammar/)
 set(ANTLR4_TAG 4.13.2)
 set(ANTLR4_ZIP_REPOSITORY https://github.com/antlr/antlr4/archive/refs/tags/4.13.2.zip)
+set(HERE ${PROJECT_SOURCE_DIR}/src/main/cpp/)
 
-include(${PROJECT_SOURCE_DIR}/src/main/cpp/CMakeLists.txt)
+include(${HERE}/CMakeLists.txt)
