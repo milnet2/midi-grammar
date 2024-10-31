@@ -14,10 +14,10 @@ set(CMAKE_C_EXTENSIONS OFF)
 include(FetchContent)
 include(ExternalProject)
 FetchContent_Declare(
-        ANTLR
+        antlr4
         URL ${ANTLR4_ZIP_REPOSITORY})
-FetchContent_MakeAvailable(ANTLR)
-include_directories(${antlr4_SOURCE_DIR})   # set by FetchContent_MakeAvailable
+FetchContent_MakeAvailable(antlr4)
+include_directories(${antlr4_SOURCE_DIR}/runtime/Cpp/runtime/src/)   # set by FetchContent_MakeAvailable
 
 include_directories(${ANTLR_SampleGrammarLexer_OUTPUT_DIR})
 include_directories(${ANTLR_SampleGrammarParser_OUTPUT_DIR})
@@ -30,4 +30,5 @@ add_library(midi_file_grammar STATIC
         ${GENERATED_GRAMMAR_DIR}/Midi1FileParser.cpp
         ${GENERATED_GRAMMAR_DIR}/Midi1FileParserListener.cpp
         ${GENERATED_GRAMMAR_DIR}/Midi1FileParserVisitor.cpp
-        ${PROJECT_SOURCE_DIR}/LexerAdapter.cpp)
+        # ${PROJECT_SOURCE_DIR}/LexerAdapter.cpp
+)
