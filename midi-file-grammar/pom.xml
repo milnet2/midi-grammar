@@ -36,15 +36,53 @@
             <properties>
                 <skipTests>true</skipTests>
                 <skip.cpp>false</skip.cpp>
+                <antlr.target.language>Cpp</antlr.target.language>
                 <cmake.download>false</cmake.download>
 <!--                <cmake.dir></cmake.dir>-->
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.googlecode.cmake-maven-project</groupId>
+                        <artifactId>cmake-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>cmake-generate</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <sourcePath>${project.build.sourceDirectory}/../cpp</sourcePath>
+                                    <targetPath>${project.build.directory}/cmake</targetPath>
+                                    <!--                            <targetPath>${project.build.directory}/${platform}-${build.type}//cmake</targetPath>-->
+                                    <!--                            <environmentVariables>-->
+                                    <!--                                <CMAKE_CLASSIFIER>${cmake.classifier}</CMAKE_CLASSIFIER>-->
+                                    <!--                            </environmentVariables>-->
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>cmake-compile</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                                <configuration>
+                                    <projectDirectory>${project.build.directory}/cmake</projectDirectory>
+                                    <!--                            <config>${cmake.config}</config>-->
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
     <properties>
         <skip.cpp>true</skip.cpp>
         <skip.kotlin>true</skip.kotlin>
+        <antlr.target.language>Java</antlr.target.language>
     </properties>
 
     <dependencies>
@@ -78,6 +116,12 @@
             <plugin>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
+                <configuration>
+                    <options>
+                        <language>${antlr.target.language}</language>
+<!--                        <package>antlrcpptest</package>-->
+                    </options>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -87,38 +131,11 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>com.googlecode.cmake-maven-project</groupId>
-                <artifactId>cmake-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>cmake-generate</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <skip>${skip.cpp}</skip>
-                            <sourcePath>${project.build.sourceDirectory}/../cpp</sourcePath>
-                            <targetPath>${project.build.directory}/cmake</targetPath>
-<!--                            <targetPath>${project.build.directory}/${platform}-${build.type}//cmake</targetPath>-->
-<!--                            <environmentVariables>-->
-<!--                                <CMAKE_CLASSIFIER>${cmake.classifier}</CMAKE_CLASSIFIER>-->
-<!--                            </environmentVariables>-->
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>cmake-compile</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <skip>${skip.cpp}</skip>
-                            <projectDirectory>${project.build.directory}/cmake</projectDirectory>
-<!--                            <config>${cmake.config}</config>-->
-                        </configuration>
-                    </execution>
-                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <skip>${skip.kotlin}</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>
