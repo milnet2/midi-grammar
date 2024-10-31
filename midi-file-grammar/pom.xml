@@ -17,14 +17,79 @@
 
     <profiles>
         <profile>
+            <id>kotlin</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <skip.kotlin>false</skip.kotlin>
+            </properties>
+        </profile>
+        <profile>
             <id>java-integration</id>
             <properties>
                 <skipTests>true</skipTests>
             </properties>
         </profile>
+        <profile>
+            <id>cpp</id>
+            <properties>
+                <skipTests>true</skipTests>
+                <skip.cpp>false</skip.cpp>
+                <antlr.target.language>Cpp</antlr.target.language>
+                <antlr.target.package>de_tobiasblaschke_lib_midi_adapter_grammar</antlr.target.package>
+                <cmake.download>false</cmake.download>
+<!--                <cmake.dir></cmake.dir>-->
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.googlecode.cmake-maven-project</groupId>
+                        <artifactId>cmake-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>cmake-generate</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <sourcePath>${project.build.sourceDirectory}/../cpp</sourcePath>
+                                    <targetPath>${project.build.directory}/cmake</targetPath>
+                                    <!--                            <targetPath>${project.build.directory}/${platform}-${build.type}//cmake</targetPath>-->
+                                    <!--                            <environmentVariables>-->
+                                    <!--                                <CMAKE_CLASSIFIER>${cmake.classifier}</CMAKE_CLASSIFIER>-->
+                                    <!--                            </environmentVariables>-->
+                                    <options>
+                                        <option>-DGENERATED_GRAMMAR_DIR=${project.build.directory}/generated-sources/antlr4/de/tobiasblaschke/lib/midi/adapter/grammar/</option>
+                                        <option>-DANTLR4_TAG=${antlr.version}</option>
+                                        <option>-DANTLR4_ZIP_REPOSITORY=https://github.com/antlr/antlr4/archive/refs/tags/${antlr.version}.zip</option>
+                                    </options>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>cmake-compile</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                                <configuration>
+                                    <projectDirectory>${project.build.directory}/cmake</projectDirectory>
+                                    <!--                            <config>${cmake.config}</config>-->
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <properties>
+        <skip.cpp>true</skip.cpp>
+        <skip.kotlin>true</skip.kotlin>
+        <antlr.target.language>Java</antlr.target.language>
+        <antlr.target.package>de.tobiasblaschke.lib.midi.adapter.grammar</antlr.target.package>
     </properties>
 
     <dependencies>
@@ -58,10 +123,29 @@
             <plugin>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
+                <configuration>
+                    <options>
+                        <language>${antlr.target.language}</language>
+                    </options>
+                    <arguments>
+                        <argument>-package</argument>
+                        <argument>${antlr.target.package}</argument>
+                    </arguments>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
+                <configuration>
+                    <skip>${skip.kotlin}</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <skip>${skip.kotlin}</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>

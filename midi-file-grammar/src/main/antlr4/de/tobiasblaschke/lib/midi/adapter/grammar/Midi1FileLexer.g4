@@ -4,6 +4,10 @@ options {
     superClass = LexerAdapter;
 }
 
+@header {
+#include "LexerAdapter.h"
+}
+
 tokens {
     /**
      *  The `LexerAdapter` will emit this token after all announced bytes have been read.
